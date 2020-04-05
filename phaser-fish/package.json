@@ -8,7 +8,8 @@
     "eject": "phaser-scripts eject"
   },
   "dependencies": {
-    "phaser": "^3.22.0"
+    "phaser": "^3.22.0",
+    "redux": "^4.0.5"
   },
   "devDependencies": {
     "@phaser-cli/scripts": "^2.0.0"

@@ -15,6 +15,12 @@ const config: GameConfig = {
   height: 600,
   backgroundColor: '#2d2d2d',
   scene: [BootScene, PlayScene],
+  physics: {
+    default: 'arcade',
+    arcade: {
+      debug: false
+    }
+  }
 }
 
 const game = new Phaser.Game(config)
