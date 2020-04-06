@@ -1,9 +1,9 @@
 import { LITTLE_FISH_EATEN, PLANKTON_EATEN, PLAYER_DIES, FISH_SHRINKAGE } from "../constants/string-constants"
 import { FISH_SHRINKAGE_FACTOR } from "../constants/game-constants"
 
-const initialGameState = {
+export const initialGameState = {
     score: 0,
-    size: 0
+    size: 1
 }
 
 export const gameScoreReducer = (state = initialGameState, action: any) => {
@@ -14,15 +14,15 @@ export const gameScoreReducer = (state = initialGameState, action: any) => {
             return {
                 ...state,
                 score: state.score + action.payload.points,
-                size: state.score + action.payload.points
+                size: state.size * action.payload.sizeMultiplier
             }
 
-        case LITTLE_FISH_EATEN:
-            return {
-                ...state,
-                score: state.score + action.payload.points,
-                size: state.score + action.payload.points
-            }
+        // case LITTLE_FISH_EATEN:
+        //     return {
+        //         ...state,
+        //         score: state.score + action.payload.points,
+        //         size: state.score + action.payload.points
+        //     }
 
         case FISH_SHRINKAGE:
             return {

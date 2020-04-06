@@ -2,10 +2,25 @@
 export const MOUSE_X_BUFFER = 30
 export const MOUSE_Y_BUFFER = 13
 
-export const MIN_PLANKTON_VALUE = 5
-export const MAX_PLANKTON_VALUE = 10
+export const MIN_PLANKTON_VALUE = 1
+export const MAX_PLANKTON_VALUE = 5
 
-export const BASE_FISH_SPEED = 10
+// export const BASE_FISH_SPEED = 10
+
+export const INITIAL_PLANKTONS = 100
+
+export const INITIAL_ENEMY_FISH = 20
+
+export const PLANKTON_COLORS: integer[] = [
+    0xFF9955, // orange
+    0xDC36E7, // pink
+    0x1F40BB, // blue
+    0x10DB10, // green
+    0xAC0707, // red
+    0x8D26D2, // purple
+]
+
+export const WATER_FRICTION = 2
 
 export const BOOST_DISTANCE = 300
 
@@ -24,3 +39,5 @@ export const POINTS_FROM_LITTLE_FISH_FACTOR = 0.9
 
 // Determines how the fish sprite is scales based on the "size" value.
 export const FISH_SCALE_TO_SIZE_FACTOR = 1
+
+

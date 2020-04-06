@@ -1,9 +1,10 @@
 import { Scene } from 'phaser'
 import { store } from './../global-state/store'
 import { PLAY_SCENE, HUD_SCENE } from '../constants/string-constants'
-import { planktonEaten } from '../global-state/game-score.actions'
-import { BOOST_DISTANCE, BASE_FISH_SPEED, MOUSE_X_BUFFER, MOUSE_Y_BUFFER, NEW_PLANKTON_SPAWN_RATE, NEW_FISH_SPAWN_RATE } from '../constants/game-constants'
-
+import { planktonEaten, shrinkFish, littleFishEaten, playerDies } from '../global-state/game-score.actions'
+import { initialGameState } from '../global-state/game-score.reducer'
+import { BOOST_DISTANCE, WATER_FRICTION, MOUSE_X_BUFFER, MOUSE_Y_BUFFER, NEW_PLANKTON_SPAWN_RATE, NEW_FISH_SPAWN_RATE, INITIAL_PLANKTONS, PLANKTON_COLORS, INITIAL_ENEMY_FISH } from '../constants/game-constants'
+// import * as util from 'util'
 
 let playerFish: any
 
@@ -15,11 +16,13 @@ let newPlanktonFrameCounter = 0
 let pointer: any
 let spacebarListener: any
 
-let gameState: any
+let gameState: any = initialGameState
 
 let planktons: any = []
 
 let singlePlankton: any
+
+let enemyFishies: any = []
 
 export default class PlayScene extends Scene {
 
@@ -28,6 +31,8 @@ export default class PlayScene extends Scene {
   bg: any
 
   outOfBoundsWalls: any = undefined
+  topHorizontalWall: any = undefined
+  leftVerticalWall: any = undefined
 
   constructor() {
     super({ key: PLAY_SCENE })
@@ -35,19 +40,28 @@ export default class PlayScene extends Scene {
 
   public create() {
 
-    // bg = this.add.image(0, 0, 'bg').setScale(5).setOrigin(0)
-
+    /**
+     * Create background sprites.
+     */
     this.bg = this.add.image(0, 0, 'bg-big').setOrigin(0)
-    this.outOfBoundsWalls = this.physics.add.sprite(0, 0, 'out-of-bounds-walls').setOrigin(0)
 
+    this.topHorizontalWall = this.physics.add.sprite(0, 0, 'horizontal-wall').setOrigin(0)
+    this.leftVerticalWall = this.physics.add.sprite(0, 0, 'vertical-wall').setOrigin(0)
+
+    this.topHorizontalWall.setImmovable(true)
+    this.leftVerticalWall.setImmovable(true)
+
+
+    /**
+     *  Create player sprite.
+     */
     playerFish = this.physics.add.sprite(
       this.game.scale.width / 2,
       this.game.scale.height / 2,
+      'fish', 2).setOrigin(0.5)
 
-      // bg.width * 0.1 + bg.width * 0.8 * Math.random(),
-      // bg.height * 0.1 + bg.height * 0.8 * Math.random(),
-      'fish').setOrigin(0.5)
 
+    // TODO - setup smaller hitbox area.
 
     // mshape = this.add.graphics();
     // mshape.fillStyle(0xffff00, 1);
@@ -57,91 +71,123 @@ export default class PlayScene extends Scene {
     //   100, 80).setOrigin(0.5)
     // this.physics.add.existing(mshape)
 
-
     // const playerFishHitbox = playerFish.physics.add.sprite()
 
     // var graphics = playerFish.physics.add.graphics(0, 0);
     // graphics.beginFill(0xFF0000);
     // graphics.drawRect(0, 0, 100, 100);
 
+    /**
+     *  Create initial enemy sprites.
+     */
 
-    // let render = this.add.graphics();
-    // let bounds = playerFish.getBounds();
+    for (var i = 0; i < INITIAL_ENEMY_FISH; i++) {
 
-    // render.lineStyle(3, 0xffff37);
-    // render.strokeRectShape(bounds);
+      const enemyFish = this.physics.add.sprite(
+        50 + (this.bg.height - 100) * Math.random(),
+        50 + (this.bg.height - 100) * Math.random(),
+        'fish'
+      ).setOrigin(0.5)
+        .setTint(PLANKTON_COLORS[
+          Math.floor(Math.random() * PLANKTON_COLORS.length)
+        ])
+        .setScale(0.2 + Math.random() * 3)
 
-    const singlePlankton = this.physics.add.sprite(
-      this.game.scale.width / 2 + Math.random() * 600,
-      this.game.scale.height / 2 + Math.random() * 600,
-      'plankton')
+      enemyFishies.push(enemyFish)
+
+    }
 
 
-    for (var i = 0; i < 20; i++) {
+    /**
+     *  Create initial planktons.
+     */
+
+    for (var i = 0; i < INITIAL_PLANKTONS; i++) {
 
       const plankton = this.physics.add.sprite(
-        this.game.scale.width / 2 + Math.random() * 3000,
-        this.game.scale.height / 2 + Math.random() * 3000,
+
+        50 + (this.bg.height - 100) * Math.random(),
+        50 + (this.bg.height - 100) * Math.random(),
         'plankton')
+        .setRotation(Math.PI * 2 * Math.random())
+        .setTint(PLANKTON_COLORS[
+          Math.floor(Math.random() * PLANKTON_COLORS.length)
+        ])
 
       planktons.push(plankton)
     }
 
-    this.cameras.main.startFollow(playerFish)
+
+    /**
+     *  Setup Mouse and keyboard listeners
+     */
 
     pointer = this.input.activePointer
-    // positionToCamera(this.cameras.main)
+    spacebarListener = this.input.keyboard.addKey('Space');
+
+
+    /** 
+     *  Setup subscription to redux store.
+     */
 
     store.subscribe(() => {
-      // console.log('state has changed! ', store.getState())
-
       gameState = store.getState()
-
-      // playerFish.scale = 
     })
 
-    // this.physics.add.collider(this.outOfBoundsWalls, playerFish, (x) => {
-    //   console.log('collision!')
-    // }, null, this)
+    /**
+     *  Setup collision handlers.
+     */
 
-    this.physics.add.overlap(singlePlankton, playerFish, (x) => {
-      console.log('collision 1!', JSON.stringify(x))
-
-
-      singlePlankton.destroy()
-
-      // store.dispatch(increment())
-
-      store.dispatch(planktonEaten())
-
-      playerFish.scale *= 1.08
-
-    },
-      null,
-      this)
+    const walls = [this.topHorizontalWall, this.leftVerticalWall]
+    this.physics.add.collider(walls, playerFish, null, null, this)
 
 
     this.physics.add.overlap(planktons, playerFish, (x, y) => {
-
-      console.log('collision x!', JSON.stringify(x))
-      console.log('collision y!', JSON.stringify(y))
-
-
       x.destroy()
-
       store.dispatch(planktonEaten())
-
-      playerFish.scale *= 1.08
-
     },
-      null,
-      this)
+      null, this)
 
-    spacebarListener = this.input.keyboard.addKey('Space');  // Get key object
+    this.physics.add.overlap(enemyFishies, playerFish, (x: any, y: any) => {
+      
+      // if (x.b)
+      
+      if (x.scale < y.scale) {
+
+        store.dispatch(littleFishEaten(x.scale))
+        
+        x.destroy()
+
+      } else {
+
+        store.dispatch(playerDies())
+        
+        y.destroy()
+
+      }
+
+      console.log('colliding fish ', x.scale)
+      console.log('with fish ', y.scale)
+
+      // x.destroy()
+      // store.dispatch(planktonEaten())
+    },
+      null, this)
+
+
+    /**
+     *  Setup Camera
+     */
+
+    this.cameras.main.startFollow(playerFish)
+    this.cameras.main.zoom = 0.5
+
+    /** 
+     *  Launch HUD overlay
+     */
 
     this.scene.launch(HUD_SCENE)
 
-    this.cameras.main.zoom = 0.5
   }
 
   update() {
@@ -157,9 +203,11 @@ export default class PlayScene extends Scene {
      */
     if (shrinkFrameCounter == 750) {
 
-      if (Math.abs(playerFish.scale) > .5) {
-        playerFish.scale *= 0.9
-      }
+      // if (Math.abs(playerFish.scale) > .5) {
+      //   playerFish.scale *= 0.9
+      // }
+
+      store.dispatch(shrinkFish())
 
       shrinkFrameCounter = 0
     }
@@ -183,68 +231,83 @@ export default class PlayScene extends Scene {
 
     }
 
+    console.log('playerFish is: ', playerFish)
 
-    if (fishMovementFrameCounter === 1) {
+    if (fishMovementFrameCounter === 1 && playerFish.body) {
 
       const lockedToCamPointer = pointer.positionToCamera(this.cameras.main)
 
       /**
        *  Listen for boost with spacebar
        */
-      if (spacebarListener.isDown) {
-        console.log('pressing space!')
+      // if (spacebarListener.isDown) {
+      //   console.log('pressing space!')
 
-        let boostDistance = BOOST_DISTANCE
+      //   let boostDistance = BOOST_DISTANCE
 
-        if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
-          boostDistance *= -1
-        }
+      //   if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
+      //     boostDistance *= -1
+      //   }
 
-        this.tweens.add({
-          targets: playerFish,
-          x: playerFish.x + boostDistance,
-          duration: 500,
-          ease: 'Cubic',
-          yoyo: false,
-          loop: false,
-        })
-      }
+      //   this.tweens.add({
+      //     targets: playerFish,
+      //     x: playerFish.x + boostDistance,
+      //     duration: 500,
+      //     ease: 'Cubic',
+      //     yoyo: false,
+      //     loop: false,
+      //   })
+      // }
 
       /**
-       *  Movement of player's fish
+       *  Move of player's fish
        */
+      let newPlayerVelocityX = playerFish.body.velocity.x - WATER_FRICTION
+      let newPlayerVelocityY = playerFish.body.velocity.y - WATER_FRICTION
 
-      playerFish.velocity = BASE_FISH_SPEED - 2 * playerFish.scale
+      if (newPlayerVelocityX < 0)
+        newPlayerVelocityX = 0
+
+      if (newPlayerVelocityY < 0)
+        newPlayerVelocityY = 0
 
       if (lockedToCamPointer.x >= playerFish.x + MOUSE_X_BUFFER) {
         playerFish.flipX = false
 
-        playerFish.x += playerFish.velocity
-        // mshape.x += playerFish.velocity
+        newPlayerVelocityX = (lockedToCamPointer.x - playerFish.x) / playerFish.scale / 2
+
       }
 
       if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
 
-        if (playerFish.x > playerFish.velocity + playerFish.width / 2) {
-          playerFish.flipX = true
+        newPlayerVelocityX = -1 * Math.abs(lockedToCamPointer.x - playerFish.x) / playerFish.scale / 2
+        playerFish.flipX = true
 
-          playerFish.x -= playerFish.velocity
-        }
       }
 
       if (lockedToCamPointer.y >= playerFish.y + MOUSE_Y_BUFFER) {
 
-        // if (playerFish.y < bg.getBounds().height)
-        playerFish.y += playerFish.velocity
+        newPlayerVelocityY = (lockedToCamPointer.y - playerFish.y) / playerFish.scale
 
       }
 
       if (lockedToCamPointer.y <= playerFish.y - MOUSE_Y_BUFFER) {
 
-        // if (playerFish.y > playerFish.velocity + playerFish.height / 2)
-        playerFish.y -= playerFish.velocity
+        newPlayerVelocityY = -1 * Math.abs(lockedToCamPointer.y - playerFish.y) / playerFish.scale
 
       }
+
+      playerFish.body.setVelocityX(newPlayerVelocityX)
+      playerFish.body.setVelocityY(newPlayerVelocityY)
+
+
+      /**
+       *  Update player Fish scale.
+       */
+
+      playerFish.scale = gameState.size
+
+
 
       fishMovementFrameCounter = 0
     }

@@ -13,7 +13,7 @@ export default class HudScene extends Scene {
     public create() {
 
         const scoreText = this.add.text(10, 10, 'Score: 0', { fontFamily: '"Roboto Condensed"', fontSize: '35px' })
-        const fishSizeText = this.add.text(10, 50, 'Size: 0', { fontFamily: '"Roboto Condensed"', fontSize: '35px' })
+        const fishSizeText = this.add.text(10, 50, 'Size: 1', { fontFamily: '"Roboto Condensed"', fontSize: '35px' })
 
         store.subscribe(() => {
 

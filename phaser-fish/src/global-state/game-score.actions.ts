@@ -2,10 +2,14 @@ import { PLANKTON_EATEN, LITTLE_FISH_EATEN, PLAYER_DIES, FISH_SHRINKAGE } from "
 import { MIN_PLANKTON_VALUE, MAX_PLANKTON_VALUE, POINTS_FROM_LITTLE_FISH_FACTOR } from "../constants/game-constants"
 
 export const planktonEaten = () => {
+    
+    const pointsRewarded = MIN_PLANKTON_VALUE + Math.floor(Math.random() * (MAX_PLANKTON_VALUE - MIN_PLANKTON_VALUE))
+    
     return {
         type: PLANKTON_EATEN, 
         payload: {
-            points: MIN_PLANKTON_VALUE + Math.floor(Math.random() * (MAX_PLANKTON_VALUE - MIN_PLANKTON_VALUE))
+            points: pointsRewarded,
+            sizeMultiplier: 1 + pointsRewarded / 100
         }
     }
 }
