@@ -1,6 +1,7 @@
 import { Scene } from 'phaser'
 import { store } from './../global-state/store'
-import { increment } from '../global-state/counter.actions'
+import { PLAY_SCENE, HUD_SCENE } from '../constants/string-constants'
+import { planktonEaten } from '../global-state/game-score.actions'
 
 
 let playerFish: any
@@ -33,7 +34,7 @@ export default class PlayScene extends Scene {
   foo = 42
 
   constructor() {
-    super({ key: 'PlayScene' })
+    super({ key: PLAY_SCENE })
   }
 
   public create() {
@@ -99,6 +100,8 @@ export default class PlayScene extends Scene {
       // console.log('state has changed! ', store.getState())
       
       gameState = store.getState()
+
+      // playerFish.scale = 
     })
     
     
@@ -108,7 +111,9 @@ export default class PlayScene extends Scene {
       
       singlePlankton.destroy()
       
-      store.dispatch(increment())
+      // store.dispatch(increment())
+      
+      store.dispatch(planktonEaten())
       
       playerFish.scale *= 1.08
       
@@ -125,7 +130,7 @@ export default class PlayScene extends Scene {
       
       x.destroy()
       
-      store.dispatch(increment())
+      store.dispatch(planktonEaten())
       
       playerFish.scale *= 1.08
       
@@ -135,11 +140,7 @@ export default class PlayScene extends Scene {
     
     spacebarListener = this.input.keyboard.addKey('Space');  // Get key object
     
-    const scoreText = this.add.text(0, 0, 'Hello World', { fontFamily: '"Roboto Condensed"', fontSize: 'px' })
-    scoreText.scrollFactorX = 0
-    scoreText.scrollFactorY = 0
-    scoreText.setFontSize(60)
-    
+    this.scene.launch(HUD_SCENE)
     
     this.cameras.main.zoom = 0.5
   }
