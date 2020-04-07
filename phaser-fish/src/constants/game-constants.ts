@@ -5,7 +5,10 @@ export const MOUSE_Y_BUFFER = 13
 export const MIN_PLANKTON_VALUE = 1
 export const MAX_PLANKTON_VALUE = 5
 
-// export const BASE_FISH_SPEED = 10
+
+export const MIN_FISH_VALUE = 3
+export const MAX_FISH_VALUE = 10
+
 
 export const INITIAL_PLANKTONS = 100
 

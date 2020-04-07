@@ -1,6 +1,6 @@
 import { Scene } from 'phaser'
 import { store } from './../global-state/store'
-import { PLAY_SCENE, HUD_SCENE } from '../constants/string-constants'
+import { PLAY_SCENE, HUD_SCENE, BOOT_SCENE } from '../constants/string-constants'
 import { planktonEaten, shrinkFish, littleFishEaten, playerDies } from '../global-state/game-score.actions'
 import { initialGameState } from '../global-state/game-score.reducer'
 import { BOOST_DISTANCE, WATER_FRICTION, MOUSE_X_BUFFER, MOUSE_Y_BUFFER, NEW_PLANKTON_SPAWN_RATE, NEW_FISH_SPAWN_RATE, INITIAL_PLANKTONS, PLANKTON_COLORS, INITIAL_ENEMY_FISH } from '../constants/game-constants'
@@ -84,16 +84,36 @@ export default class PlayScene extends Scene {
     for (var i = 0; i < INITIAL_ENEMY_FISH; i++) {
 
       const enemyFish = this.physics.add.sprite(
-        50 + (this.bg.height - 100) * Math.random(),
-        50 + (this.bg.height - 100) * Math.random(),
+        50 + (this.bg.width - 50) * Math.random(),
+        50 + (this.bg.height - 50) * Math.random(),
         'fish'
       ).setOrigin(0.5)
         .setTint(PLANKTON_COLORS[
           Math.floor(Math.random() * PLANKTON_COLORS.length)
         ])
         .setScale(0.2 + Math.random() * 3)
+        .setVelocityX(3 + Math.random() * 5)
 
       enemyFishies.push(enemyFish)
+
+      const endPositionX = 25 + Math.random() * (this.bg.width - 25)
+      const endPositionY = 25 + Math.random() * (this.bg.height - 25)
+
+      const durationX = 1000 * 5 + Math.random() * 6
+      const durationY = 1000 * 5 + Math.random() * 6
+
+      enemyFish.setFlipX(enemyFish.x > endPositionX )
+
+      this.tweens.add({
+        targets: enemyFish,
+        props: {
+            x: { value: endPositionX, duration: durationX, flipX: true},
+            y: { value: endPositionY, duration: durationY,  },
+        },
+        ease: 'Sine.easeInOut',
+        yoyo: true,
+        repeat: -1
+    });
 
     }
 
@@ -106,8 +126,8 @@ export default class PlayScene extends Scene {
 
       const plankton = this.physics.add.sprite(
 
-        50 + (this.bg.height - 100) * Math.random(),
-        50 + (this.bg.height - 100) * Math.random(),
+        50 + (this.bg.width - 50) * Math.random(),
+        50 + (this.bg.height - 50) * Math.random(),
         'plankton')
         .setRotation(Math.PI * 2 * Math.random())
         .setTint(PLANKTON_COLORS[
@@ -149,25 +169,22 @@ export default class PlayScene extends Scene {
       null, this)
 
     this.physics.add.overlap(enemyFishies, playerFish, (x: any, y: any) => {
-      
+
       // if (x.b)
-      
+
       if (x.scale < y.scale) {
 
         store.dispatch(littleFishEaten(x.scale))
-        
+
         x.destroy()
 
       } else {
 
         store.dispatch(playerDies())
-        
+
         y.destroy()
 
       }
-
-      console.log('colliding fish ', x.scale)
-      console.log('with fish ', y.scale)
 
       // x.destroy()
       // store.dispatch(planktonEaten())
@@ -231,33 +248,34 @@ export default class PlayScene extends Scene {
 
     }
 
-    console.log('playerFish is: ', playerFish)
-
     if (fishMovementFrameCounter === 1 && playerFish.body) {
 
       const lockedToCamPointer = pointer.positionToCamera(this.cameras.main)
 
       /**
-       *  Listen for boost with spacebar
-       */
-      // if (spacebarListener.isDown) {
-      //   console.log('pressing space!')
+        *  Listen for boost with spacebar
+        */
+      if (spacebarListener.isDown) {
+        console.log('pressing space!')
 
-      //   let boostDistance = BOOST_DISTANCE
+        let boostDistance = BOOST_DISTANCE
 
-      //   if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
-      //     boostDistance *= -1
-      //   }
+        if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
+          boostDistance *= -1
+        }
 
-      //   this.tweens.add({
-      //     targets: playerFish,
-      //     x: playerFish.x + boostDistance,
-      //     duration: 500,
-      //     ease: 'Cubic',
-      //     yoyo: false,
-      //     loop: false,
-      //   })
-      // }
+        // newPlayerVelocityX += 130 
+
+        this.tweens.add({
+          targets: playerFish,
+          x: playerFish.x + boostDistance,
+          duration: 500,
+          ease: 'Cubic',
+          yoyo: false,
+          loop: false,
+        })
+      }
+
 
       /**
        *  Move of player's fish
@@ -274,31 +292,34 @@ export default class PlayScene extends Scene {
       if (lockedToCamPointer.x >= playerFish.x + MOUSE_X_BUFFER) {
         playerFish.flipX = false
 
-        newPlayerVelocityX = (lockedToCamPointer.x - playerFish.x) / playerFish.scale / 2
+        newPlayerVelocityX = (lockedToCamPointer.x - playerFish.x) / playerFish.scale
 
       }
 
       if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
 
-        newPlayerVelocityX = -1 * Math.abs(lockedToCamPointer.x - playerFish.x) / playerFish.scale / 2
+        newPlayerVelocityX = -1 * Math.abs(lockedToCamPointer.x - playerFish.x) / playerFish.scale
         playerFish.flipX = true
 
       }
 
       if (lockedToCamPointer.y >= playerFish.y + MOUSE_Y_BUFFER) {
 
-        newPlayerVelocityY = (lockedToCamPointer.y - playerFish.y) / playerFish.scale
+        newPlayerVelocityY = (lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
 
       }
 
       if (lockedToCamPointer.y <= playerFish.y - MOUSE_Y_BUFFER) {
 
-        newPlayerVelocityY = -1 * Math.abs(lockedToCamPointer.y - playerFish.y) / playerFish.scale
+        newPlayerVelocityY = -1 * Math.abs(lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
 
       }
 
+
+
       playerFish.body.setVelocityX(newPlayerVelocityX)
       playerFish.body.setVelocityY(newPlayerVelocityY)
+
 
 
       /**
@@ -307,9 +328,11 @@ export default class PlayScene extends Scene {
 
       playerFish.scale = gameState.size
 
-
-
       fishMovementFrameCounter = 0
+
+
+
+
     }
 
   }

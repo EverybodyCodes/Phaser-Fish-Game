@@ -20,7 +20,7 @@ export default class HudScene extends Scene {
             const state = store.getState()
 
             scoreText.setText(`Score: ${JSON.stringify(state.score)}`)
-            fishSizeText.setText(`Size: ${JSON.stringify(state.size)}`)
+            fishSizeText.setText(`Size: ${state.size.toFixed(2)}`)
 
         })
 

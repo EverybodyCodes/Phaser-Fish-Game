@@ -8,6 +8,8 @@ export const initialGameState = {
 
 export const gameScoreReducer = (state = initialGameState, action: any) => {
 
+    console.log('handling an action...', action)
+
     switch (action.type) {
 
         case PLANKTON_EATEN:
@@ -17,12 +19,15 @@ export const gameScoreReducer = (state = initialGameState, action: any) => {
                 size: state.size * action.payload.sizeMultiplier
             }
 
-        // case LITTLE_FISH_EATEN:
-        //     return {
-        //         ...state,
-        //         score: state.score + action.payload.points,
-        //         size: state.score + action.payload.points
-        //     }
+        case LITTLE_FISH_EATEN:
+
+            console.log('little fish action: ', action)
+
+            return {
+                ...state,
+                score: state.score + action.payload.points,
+                size: state.size * action.payload.sizeMultiplier
+            }
 
         case FISH_SHRINKAGE:
             return {
