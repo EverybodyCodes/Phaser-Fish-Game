@@ -39,6 +39,13 @@ Like agar.io, we can have subtle adverts on the start screen to fund the cost of
 
 We've got a long way to go until this game is ready to release to users! Here's a screenshot of the current state as of April 5th, 2020.
 
+
+## 4/6/2020
+
+<img src='./fish-game-screenshot-4-6-2020.png'/>
+
+## 4/5/2020
+
 <img src='./fish-game-screenshot-4-5-2020.png'/>
 
 
