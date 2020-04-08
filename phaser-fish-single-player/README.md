@@ -1,5 +1,6 @@
-# Phaser Fish Game Dev Guide
+# Phaser Fish Single Player - Dev Guide
 
+Welcome to the dev guide for the fish game singleplayer mode! 💻 🚀 🤘
 
 
 ## Usage

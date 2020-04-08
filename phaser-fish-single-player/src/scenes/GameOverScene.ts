@@ -33,10 +33,10 @@ export default class GaveOverScene extends Scene {
 
     this.scene.remove(PLAY_SCENE);
 
-    window.setTimeout(() => {
+    // window.setTimeout(() => {
 
-        console.log("daraf, ", this.scene)
-        this.scene.start(PLAY_SCENE)
-    }, 300)
+    //     console.log("daraf, ", this.scene)
+    //     this.scene.start(PLAY_SCENE)
+    // }, 300)
   }
 }

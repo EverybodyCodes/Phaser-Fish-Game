@@ -1,6 +1,6 @@
 import { Scene } from 'phaser'
 import { store } from './../global-state/store'
-import { PLAY_SCENE, HUD_SCENE, BOOT_SCENE, GAME_OVER_SCENE } from '../constants/string-constants'
+import { PLAY_SCENE, HUD_SCENE } from '../constants/string-constants'
 import { planktonEaten, shrinkFish, littleFishEaten, playerDies } from '../global-state/game-score.actions'
 import { initialGameState } from '../global-state/game-score.reducer'
 import { BOOST_DISTANCE, WATER_FRICTION, MOUSE_X_BUFFER, MOUSE_Y_BUFFER, NEW_PLANKTON_SPAWN_RATE, NEW_FISH_SPAWN_RATE, INITIAL_PLANKTONS, PLANKTON_COLORS, INITIAL_ENEMY_FISH } from '../constants/game-constants'
