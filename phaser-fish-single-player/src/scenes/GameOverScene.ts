@@ -6,6 +6,7 @@ import verticalWall from '../assets/ui/vertical-wall.png'
 import horizontalWall from '../assets/ui/horizontal-wall.png'
 import plankton from '../assets/sprites/plankton.png'
 import { PLAY_SCENE, GAME_OVER_SCENE } from '../constants/string-constants'
+import PlayScene from './PlayScene'
 
 export default class GaveOverScene extends Scene {
   constructor() {
@@ -31,9 +32,14 @@ export default class GaveOverScene extends Scene {
 
   public create() {
 
+    this.scene.remove(PLAY_SCENE)
+
     window.setTimeout(() => {
 
-      this.scene.start(PLAY_SCENE)
+      // this.game.add(PLAY_SCENE, PlayScene)
+
+      this.scene.add(PLAY_SCENE, PlayScene, true)
+      // this.scene.start(PLAY_SCENE)
 
     }, 3000)
   }

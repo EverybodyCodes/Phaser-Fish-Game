@@ -108,18 +108,18 @@ export default class PlayScene extends Scene {
       const durationX = 1000 * 5 + Math.random() * 6
       const durationY = 1000 * 5 + Math.random() * 6
 
-      enemyFish.setFlipX(enemyFish.x > endPositionX )
+      enemyFish.setFlipX(enemyFish.x > endPositionX)
 
       this.tweens.add({
         targets: enemyFish,
         props: {
-            x: { value: endPositionX, duration: durationX, flipX: true},
-            y: { value: endPositionY, duration: durationY,  },
+          x: { value: endPositionX, duration: durationX, flipX: true },
+          y: { value: endPositionY, duration: durationY, },
         },
         ease: 'Sine.easeInOut',
         yoyo: true,
         repeat: -1
-    });
+      });
 
     }
 
@@ -148,10 +148,20 @@ export default class PlayScene extends Scene {
      *  Setup Mouse and keyboard listeners
      */
 
-    this.pointer = this.input.activePointer
+    // this.pointer = this.input.activePointer
+
+    this.input.on('pointermove', (pointer: any) => {
+      // var touchX = pointer.x;
+      // var touchY = pointer.y;
+
+
+      // console.log('pointer ', pointer)
+      this.pointer = pointer
+      // console.log('this pointer? ', this.pointer.x)
+    });
+
     this.spacebarListener = this.input.keyboard.addKey('Space');
 
-    console.log('this pointer? ', this.pointer)
 
     /** 
      *  Setup subscription to redux store.
@@ -190,6 +200,9 @@ export default class PlayScene extends Scene {
         store.dispatch(playerDies())
 
         y.destroy()
+
+        this.registry.destroy();
+        // this.scene.events.off();
 
         this.scene.start(GAME_OVER_SCENE)
 
@@ -257,10 +270,16 @@ export default class PlayScene extends Scene {
 
     }
 
-    if (fishMovementFrameCounter === 1 && playerFish.body) {
+
+    console.log('this pointer is: ', fishMovementFrameCounter, this.pointer !== undefined, playerFish.body)
+
+    if (playerFish.body && this.pointer !== undefined) {
+
+      console.log('in here! ')
 
       const lockedToCamPointer = this.pointer.positionToCamera(this.cameras.main)
 
+      console.log('locked pointer ', lockedToCamPointer.x)
       /**
         *  Listen for boost with spacebar
         */
@@ -337,13 +356,15 @@ export default class PlayScene extends Scene {
 
       playerFish.scale = gameState.size
 
-      fishMovementFrameCounter = 0
-
-
+      // fishMovementFrameCounter = 0
 
 
     }
 
+  }
+
+  destroy() {
+    console.log('destroying!')
   }
 
 
