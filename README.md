@@ -2,6 +2,7 @@
 
 A little browser game make with [Phaser](https://phaser.io/phaser3)!
 
+Test it here! -> https://everybodycodes.github.io/Phaser-Fish-Game/
 
 <br/>
 
@@ -71,7 +72,7 @@ Features:
 <br/>
 
 # Get Involved
-This is an open-source project, and we'd love you have you on board and helping to steer the direction of this game! The best way to get started is to clone this project and poke around. The README file within the `phaser-fish` directory contains more technical directions on how to build and run the source code.
+This is an open-source project, and we'd love you have you on board and helping to steer the direction of this game! The best way to get started is to clone this project and poke around. The README file within the `phaser-fish-single-player` directory contains more technical directions on how to build and run the source code.
 
 Also, join our chatroom to see what everyone is working on and learn how to can best help the team!
 
