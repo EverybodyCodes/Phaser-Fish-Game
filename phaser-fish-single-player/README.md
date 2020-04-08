@@ -5,7 +5,7 @@ Welcome to the dev guide for the fish game singleplayer mode! 💻 🚀 🤘
 
 ## Usage
 
-Run the following commands in this `phaser-fish` directory.
+Run the following commands in this `phaser-fish-single-player` directory.
 
 
 ## Please use node v12.16.1:

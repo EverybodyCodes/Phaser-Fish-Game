@@ -5,7 +5,8 @@
   "scripts": {
     "start": "phaser-scripts start",
     "build": "phaser-scripts build",
-    "eject": "phaser-scripts eject"
+    "eject": "phaser-scripts eject",
+    "deploy": "gh-pages -d ./build"
   },
   "dependencies": {
     "phaser": "^3.22.0",
