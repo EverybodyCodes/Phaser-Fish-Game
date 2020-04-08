@@ -2,6 +2,8 @@ import * as Phaser from 'phaser'
 import BootScene from './scenes/BootScene'
 import PlayScene from './scenes/PlayScene'
 import HudScene from './scenes/HudScene'
+import GameOverScene from './scenes/GameOverScene'
+
 
 declare global {
   interface Window {
@@ -15,11 +17,11 @@ const config: GameConfig = {
   width: window.innerWidth,
   height: window.innerWidth * 3/4,
   backgroundColor: '#2d2d2d',
-  scene: [BootScene, PlayScene, HudScene],
+  scene: [BootScene, PlayScene, HudScene, GameOverScene],
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true
+      debug: false
     }
   }
 }

@@ -1,6 +1,6 @@
 import { Scene } from 'phaser'
 import { store } from './../global-state/store'
-import { PLAY_SCENE, HUD_SCENE, BOOT_SCENE } from '../constants/string-constants'
+import { PLAY_SCENE, HUD_SCENE, BOOT_SCENE, GAME_OVER_SCENE } from '../constants/string-constants'
 import { planktonEaten, shrinkFish, littleFishEaten, playerDies } from '../global-state/game-score.actions'
 import { initialGameState } from '../global-state/game-score.reducer'
 import { BOOST_DISTANCE, WATER_FRICTION, MOUSE_X_BUFFER, MOUSE_Y_BUFFER, NEW_PLANKTON_SPAWN_RATE, NEW_FISH_SPAWN_RATE, INITIAL_PLANKTONS, PLANKTON_COLORS, INITIAL_ENEMY_FISH } from '../constants/game-constants'
@@ -30,9 +30,11 @@ export default class PlayScene extends Scene {
 
   bg: any
 
-  outOfBoundsWalls: any = undefined
+  // outOfBoundsWalls: any = undefined
   topHorizontalWall: any = undefined
+  bottomHorizontalWall: any = undefined
   leftVerticalWall: any = undefined
+  rightVerticalWall: any = undefined
 
   constructor() {
     super({ key: PLAY_SCENE })
@@ -47,9 +49,13 @@ export default class PlayScene extends Scene {
 
     this.topHorizontalWall = this.physics.add.sprite(0, 0, 'horizontal-wall').setOrigin(0)
     this.leftVerticalWall = this.physics.add.sprite(0, 0, 'vertical-wall').setOrigin(0)
+    this.rightVerticalWall = this.physics.add.sprite(this.bg.width, 0, 'vertical-wall').setOrigin(0)
+    this.bottomHorizontalWall = this.physics.add.sprite(0, this.bg.height, 'horizontal-wall').setOrigin(0)
 
     this.topHorizontalWall.setImmovable(true)
     this.leftVerticalWall.setImmovable(true)
+    this.rightVerticalWall.setImmovable(true)
+    this.bottomHorizontalWall.setImmovable(true)
 
 
     /**
@@ -158,7 +164,7 @@ export default class PlayScene extends Scene {
      *  Setup collision handlers.
      */
 
-    const walls = [this.topHorizontalWall, this.leftVerticalWall]
+    const walls = [this.topHorizontalWall, this.leftVerticalWall, this.bottomHorizontalWall, this.rightVerticalWall]
     this.physics.add.collider(walls, playerFish, null, null, this)
 
 
@@ -183,6 +189,8 @@ export default class PlayScene extends Scene {
         store.dispatch(playerDies())
 
         y.destroy()
+
+        // this.scene.start(GAME_OVER_SCENE)
 
       }
 
