@@ -1,16 +1,38 @@
-# Phaser Project
+# Phaser Fish Game Dev Guide
 
-This project was bootstrapped with [Phaser CLI][1]
+
 
 ## Usage
 
-### Running in Development
+Run the following commands in this `phaser-fish` directory.
+
+
+## Please use node v12.16.1:
+```
+nvm use
+```
+
+^ (uses what's in .nvmrc)
+
+
+## Install Dependencies
+```
+npm i
+```
+
+
+### Running 
+
+This command will start a local server hosting the frontend (with hot reloading- thanks phaser!)
 
 ```bash
 npm start
 # or
 yarn start
 ```
+
+Then view the site in a browser at http://localhost:8080/ .
+
 
 ### Build for Production
 
@@ -20,11 +42,22 @@ npm run build
 yarn run build
 ```
 
-## Acknowledgements
 
-Phaser CLI is based on [Create React App][2] by Facebook and [vue-cli][3] by
-Evan You.
+### Deploying
 
-[1]: https://github.com/phaser-cli/phaser-cli
-[2]: https://github.com/facebook/create-react-app
-[3]: https://github.com/vuejs/vue-cli
+(Haven't gotten that far yet. lol)
+
+
+# Acknowledgements
+
+#### Phaser
+Thanks Rich and other contributors for the awesome game framework!
+
+#### Phaser CLI
+Thanks Evan and other contributors for making it super easy to scaffold a new TypeScript Phaser3 project!
+
+#### Phaser
+Thanks Dan and other contributors for the awesome state management libraries!
+
+#### Redux
+This game - Thanks Jim and other contributos for this awesome game!
