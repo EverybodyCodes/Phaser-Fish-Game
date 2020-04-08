@@ -1,6 +1,6 @@
 import { Scene } from 'phaser'
 import { store } from './../global-state/store'
-import { PLAY_SCENE, HUD_SCENE } from '../constants/string-constants'
+import { PLAY_SCENE, HUD_SCENE, GAME_OVER_SCENE } from '../constants/string-constants'
 import { planktonEaten, shrinkFish, littleFishEaten, playerDies } from '../global-state/game-score.actions'
 import { initialGameState } from '../global-state/game-score.reducer'
 import { BOOST_DISTANCE, WATER_FRICTION, MOUSE_X_BUFFER, MOUSE_Y_BUFFER, NEW_PLANKTON_SPAWN_RATE, NEW_FISH_SPAWN_RATE, INITIAL_PLANKTONS, PLANKTON_COLORS, INITIAL_ENEMY_FISH } from '../constants/game-constants'
@@ -12,9 +12,6 @@ let fishMovementFrameCounter = 0
 let shrinkFrameCounter = 0
 let newFishFrameCounter = 0
 let newPlanktonFrameCounter = 0
-
-let pointer: any
-let spacebarListener: any
 
 let gameState: any = initialGameState
 
@@ -35,6 +32,9 @@ export default class PlayScene extends Scene {
   bottomHorizontalWall: any = undefined
   leftVerticalWall: any = undefined
   rightVerticalWall: any = undefined
+
+  pointer: any
+  spacebarListener: any
 
   constructor() {
     super({ key: PLAY_SCENE })
@@ -148,9 +148,10 @@ export default class PlayScene extends Scene {
      *  Setup Mouse and keyboard listeners
      */
 
-    pointer = this.input.activePointer
-    spacebarListener = this.input.keyboard.addKey('Space');
+    this.pointer = this.input.activePointer
+    this.spacebarListener = this.input.keyboard.addKey('Space');
 
+    console.log('this pointer? ', this.pointer)
 
     /** 
      *  Setup subscription to redux store.
@@ -190,7 +191,7 @@ export default class PlayScene extends Scene {
 
         y.destroy()
 
-        // this.scene.start(GAME_OVER_SCENE)
+        this.scene.start(GAME_OVER_SCENE)
 
       }
 
@@ -258,12 +259,12 @@ export default class PlayScene extends Scene {
 
     if (fishMovementFrameCounter === 1 && playerFish.body) {
 
-      const lockedToCamPointer = pointer.positionToCamera(this.cameras.main)
+      const lockedToCamPointer = this.pointer.positionToCamera(this.cameras.main)
 
       /**
         *  Listen for boost with spacebar
         */
-      if (spacebarListener.isDown) {
+      if (this.spacebarListener.isDown) {
         console.log('pressing space!')
 
         let boostDistance = BOOST_DISTANCE
