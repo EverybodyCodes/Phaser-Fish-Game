@@ -14,7 +14,7 @@ declare global {
 const config: GameConfig = {
   type: Phaser.AUTO,
   parent: 'app',
-  width: window.innerWidth,
+  width: Math.min(window.innerWidth, 800),
   height: window.innerWidth * 3/4,
   backgroundColor: '#2d2d2d',
   scene: [BootScene, PlayScene, HudScene, GameOverScene],
