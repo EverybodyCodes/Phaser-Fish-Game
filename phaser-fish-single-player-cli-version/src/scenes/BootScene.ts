@@ -16,6 +16,9 @@ export default class BootScene extends Scene {
 
   public preload() {
 
+
+    this.load.setBaseURL('https://everybodycodes.github.io/Phaser-Fish-Game/')
+
     this.load.image('logo', logo)
     // this.load.image('bg', bg)
     this.load.image('bg-big', bgBig)

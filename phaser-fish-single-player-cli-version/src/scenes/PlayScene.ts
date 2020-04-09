@@ -1,5 +1,5 @@
 import { Scene } from 'phaser'
-import { store } from './../global-state/store'
+import { store } from '../global-state/store'
 import { PLAY_SCENE, HUD_SCENE, GAME_OVER_SCENE } from '../constants/string-constants'
 import { planktonEaten, shrinkFish, littleFishEaten, playerDies } from '../global-state/game-score.actions'
 import { initialGameState } from '../global-state/game-score.reducer'
