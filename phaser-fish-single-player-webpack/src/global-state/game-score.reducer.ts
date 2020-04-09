@@ -3,7 +3,9 @@ import { FISH_SHRINKAGE_FACTOR } from "../constants/game-constants"
 
 export const initialGameState = {
     score: 0,
-    size: 1
+    size: 1,
+    previousGameScore: 0,
+    highestScore: 0
 }
 
 export const gameScoreReducer = (state = initialGameState, action: any) => {
@@ -39,7 +41,9 @@ export const gameScoreReducer = (state = initialGameState, action: any) => {
             return {
                 ...state,
                 score: 0,
-                size: 0
+                size: 1,
+                previousGameScore: state.score,
+                highestScore: Math.max(state.score, state.highestScore)
             }
 
         default:

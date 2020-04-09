@@ -32,7 +32,7 @@ export const PLANKTON_GENERATION_RATE = 10
 // Frames between fish shrinkage.
 export const FISH_SHRINKAGE_SPEED = 750
 export const NEW_FISH_SPAWN_RATE = 750
-export const NEW_PLANKTON_SPAWN_RATE = 750
+export const NEW_PLANKTON_SPAWN_RATE = 420
 
 // Amount fish shrinks with each shrinkage.
 export const FISH_SHRINKAGE_FACTOR = 0.9

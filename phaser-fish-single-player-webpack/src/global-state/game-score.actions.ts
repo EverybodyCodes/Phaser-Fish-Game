@@ -9,7 +9,7 @@ export const planktonEaten = () => {
         type: PLANKTON_EATEN,
         payload: {
             points: pointsRewarded,
-            sizeMultiplier: 1 + pointsRewarded / 100 / 3
+            sizeMultiplier: 1 + pointsRewarded / 100 / 2
             
         }
     }
@@ -28,7 +28,7 @@ export const littleFishEaten = (littleFishSize: integer) => {
         type: LITTLE_FISH_EATEN,
         payload: {
             points: pointsRewarded,
-            sizeMultiplier: 1 + pointsRewarded / 100 / 3
+            sizeMultiplier: 1 + pointsRewarded / 100 / 2
         }
     }
     
