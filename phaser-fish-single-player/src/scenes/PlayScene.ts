@@ -227,6 +227,15 @@ export default class PlayScene extends Scene {
 
     this.scene.launch(HUD_SCENE)
 
+
+    window.setTimeout(() => {
+
+      this.scene.start(GAME_OVER_SCENE)
+
+    }, 3000)
+
+
+
   }
 
   update() {
@@ -283,70 +292,70 @@ export default class PlayScene extends Scene {
       /**
         *  Listen for boost with spacebar
         */
-      if (this.spacebarListener.isDown) {
-        console.log('pressing space!')
+      // if (this.spacebarListener.isDown) {
+      //   console.log('pressing space!')
 
-        let boostDistance = BOOST_DISTANCE
+      //   let boostDistance = BOOST_DISTANCE
 
-        if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
-          boostDistance *= -1
-        }
+      //   if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
+      //     boostDistance *= -1
+      //   }
 
-        // newPlayerVelocityX += 130 
+      //   // newPlayerVelocityX += 130 
 
-        this.tweens.add({
-          targets: playerFish,
-          x: playerFish.x + boostDistance,
-          duration: 500,
-          ease: 'Cubic',
-          yoyo: false,
-          loop: false,
-        })
-      }
+      //   this.tweens.add({
+      //     targets: playerFish,
+      //     x: playerFish.x + boostDistance,
+      //     duration: 500,
+      //     ease: 'Cubic',
+      //     yoyo: false,
+      //     loop: false,
+      //   })
+      // }
 
 
       /**
        *  Move of player's fish
        */
-      let newPlayerVelocityX = playerFish.body.velocity.x - WATER_FRICTION
-      let newPlayerVelocityY = playerFish.body.velocity.y - WATER_FRICTION
+      // let newPlayerVelocityX = playerFish.body.velocity.x - WATER_FRICTION
+      // let newPlayerVelocityY = playerFish.body.velocity.y - WATER_FRICTION
 
-      if (newPlayerVelocityX < 0)
-        newPlayerVelocityX = 0
+      // if (newPlayerVelocityX < 0)
+      //   newPlayerVelocityX = 0
 
-      if (newPlayerVelocityY < 0)
-        newPlayerVelocityY = 0
+      // if (newPlayerVelocityY < 0)
+      //   newPlayerVelocityY = 0
 
-      if (lockedToCamPointer.x >= playerFish.x + MOUSE_X_BUFFER) {
-        playerFish.flipX = false
+      // if (lockedToCamPointer.x >= playerFish.x + MOUSE_X_BUFFER) {
+      //   playerFish.flipX = false
 
-        newPlayerVelocityX = (lockedToCamPointer.x - playerFish.x) / playerFish.scale
+      //   newPlayerVelocityX = (lockedToCamPointer.x - playerFish.x) / playerFish.scale
 
-      }
+      // }
 
-      if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
+      // if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
 
-        newPlayerVelocityX = -1 * Math.abs(lockedToCamPointer.x - playerFish.x) / playerFish.scale
-        playerFish.flipX = true
+      //   newPlayerVelocityX = -1 * Math.abs(lockedToCamPointer.x - playerFish.x) / playerFish.scale
+      //   playerFish.flipX = true
 
-      }
+      // }
 
-      if (lockedToCamPointer.y >= playerFish.y + MOUSE_Y_BUFFER) {
+      // if (lockedToCamPointer.y >= playerFish.y + MOUSE_Y_BUFFER) {
 
-        newPlayerVelocityY = (lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
+      //   newPlayerVelocityY = (lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
 
-      }
+      // }
 
-      if (lockedToCamPointer.y <= playerFish.y - MOUSE_Y_BUFFER) {
+      // if (lockedToCamPointer.y <= playerFish.y - MOUSE_Y_BUFFER) {
 
-        newPlayerVelocityY = -1 * Math.abs(lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
+      //   newPlayerVelocityY = -1 * Math.abs(lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
 
-      }
+      // }
 
 
 
-      playerFish.body.setVelocityX(newPlayerVelocityX)
-      playerFish.body.setVelocityY(newPlayerVelocityY)
+      // playerFish.body.setVelocityX(newPlayerVelocityX)
+      // playerFish.body.setVelocityY(newPlayerVelocityY)
 
 
 
