@@ -5,8 +5,9 @@ import bgBig from '../assets/ui/undersea-bg-big.png'
 import verticalWall from '../assets/ui/vertical-wall.png'
 import horizontalWall from '../assets/ui/horizontal-wall.png'
 import plankton from '../assets/sprites/plankton.png'
-import { PLAY_SCENE, GAME_OVER_SCENE } from '../constants/string-constants'
+import { PLAY_SCENE, GAME_OVER_SCENE, HUD_SCENE } from '../constants/string-constants'
 import PlayScene from './PlayScene'
+import HudScene from './HudScene'
 
 export default class GaveOverScene extends Scene {
   constructor() {
@@ -32,14 +33,18 @@ export default class GaveOverScene extends Scene {
 
   public create() {
 
-    this.scene.remove(PLAY_SCENE)
+    this.scene.stop(PLAY_SCENE)
+
+    // this.scene.stop(HUD_SCENE)
 
     window.setTimeout(() => {
 
       // this.game.add(PLAY_SCENE, PlayScene)
+      
+      // this.scene.add(HUD_SCENE, HudScene, false)
 
-      this.scene.add(PLAY_SCENE, PlayScene, true)
-      // this.scene.start(PLAY_SCENE)
+      // this.scene.add(PLAY_SCENE, PlayScene, true)
+      this.scene.start(PLAY_SCENE)
 
     }, 3000)
   }

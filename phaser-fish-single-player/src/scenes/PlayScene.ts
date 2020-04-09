@@ -36,6 +36,9 @@ export default class PlayScene extends Scene {
   pointer: any
   spacebarListener: any
 
+  boostable = true
+  boosting = false
+
   constructor() {
     super({ key: PLAY_SCENE })
   }
@@ -167,9 +170,9 @@ export default class PlayScene extends Scene {
      *  Setup subscription to redux store.
      */
 
-    store.subscribe(() => {
-      gameState = store.getState()
-    })
+    // store.subscribe(() => {
+    //   gameState = store.getState()
+    // })
 
     /**
      *  Setup collision handlers.
@@ -204,7 +207,7 @@ export default class PlayScene extends Scene {
         this.registry.destroy();
         // this.scene.events.off();
 
-        this.scene.start(GAME_OVER_SCENE)
+        this.scene.launch(GAME_OVER_SCENE)
 
       }
 
@@ -221,19 +224,58 @@ export default class PlayScene extends Scene {
     this.cameras.main.startFollow(playerFish)
     this.cameras.main.zoom = 0.5
 
+    // this.cameras.main.stopFollow()
     /** 
      *  Launch HUD overlay
      */
 
-    this.scene.launch(HUD_SCENE)
 
 
-    window.setTimeout(() => {
+    if (!this.scene.isActive(HUD_SCENE))
+      this.scene.launch(HUD_SCENE)
 
-      this.scene.start(GAME_OVER_SCENE)
 
-    }, 3000)
+    // window.setTimeout(() => {
 
+    //   // this.registry.destroy();
+
+    //   this.cameras.resetAll()
+
+    //   this.scene.start(GAME_OVER_SCENE)
+
+    // }, 26000)
+
+
+    // this.input.keyboard.on('keydown-' + 'SPACE', function () {
+
+    //   console.log('space key pressed! ')
+
+    //   if (this.pointer !== undefined) {
+
+    //     // const lockedToCamPointer = this.pointer.positionToCamera(this.cameras.main)
+
+    //     // if (this.boostable === true) {
+    //     //   this.boostable = false;
+    //     //   // this.physics.moveTo(playerFish, this.pointer.x, this.pointer.y, 700); // not sure this will work, we'll see
+
+    //     //   const BOOST = 600
+
+    //     //   playerFish.setVelocityX(playerFish.velocity.x + BOOST)
+    //     //   playerFish.setVelocityY(playerFish.velocity.y + BOOST)
+
+    //     //   setTimeout(() => {
+    //     //     playerFish.setVelocityX(playerFish.velocity.x - BOOST)
+    //     //     playerFish.setVelocityY(playerFish.velocity.y - BOOST)
+    //     //     // playerFish.body.reset(playerFish.x, playerFish.y); // moveTo never stops so we have to cancel the above
+    //     //   }, 500);
+
+    //     //   setTimeout(() => {
+    //     //     this.boostable = true; // allows boosting again
+    //     //   }, 2000);
+    //     // }
+
+    //   }
+    // });
 
 
   }
@@ -280,15 +322,15 @@ export default class PlayScene extends Scene {
     }
 
 
-    console.log('this pointer is: ', fishMovementFrameCounter, this.pointer !== undefined, playerFish.body)
+    // console.log('this pointer is: ', fishMovementFrameCounter, this.pointer !== undefined, playerFish.body)
 
     if (playerFish.body && this.pointer !== undefined) {
 
-      console.log('in here! ')
+      // console.log('in here! ')
+
 
       const lockedToCamPointer = this.pointer.positionToCamera(this.cameras.main)
-
-      console.log('locked pointer ', lockedToCamPointer.x)
+      // console.log('locked pointer ', lockedToCamPointer.x)
       /**
         *  Listen for boost with spacebar
         */
@@ -317,64 +359,152 @@ export default class PlayScene extends Scene {
       /**
        *  Move of player's fish
        */
-      // let newPlayerVelocityX = playerFish.body.velocity.x - WATER_FRICTION
-      // let newPlayerVelocityY = playerFish.body.velocity.y - WATER_FRICTION
-
-      // if (newPlayerVelocityX < 0)
-      //   newPlayerVelocityX = 0
-
-      // if (newPlayerVelocityY < 0)
-      //   newPlayerVelocityY = 0
-
-      // if (lockedToCamPointer.x >= playerFish.x + MOUSE_X_BUFFER) {
-      //   playerFish.flipX = false
-
-      //   newPlayerVelocityX = (lockedToCamPointer.x - playerFish.x) / playerFish.scale
-
-      // }
-
-      // if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
-
-      //   newPlayerVelocityX = -1 * Math.abs(lockedToCamPointer.x - playerFish.x) / playerFish.scale
-      //   playerFish.flipX = true
-
-      // }
-
-      // if (lockedToCamPointer.y >= playerFish.y + MOUSE_Y_BUFFER) {
-
-      //   newPlayerVelocityY = (lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
-
-      // }
-
-      // if (lockedToCamPointer.y <= playerFish.y - MOUSE_Y_BUFFER) {
-
-      //   newPlayerVelocityY = -1 * Math.abs(lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
-
-      // }
+      let newPlayerVelocityX = playerFish.body.velocity.x - WATER_FRICTION
+      let newPlayerVelocityY = playerFish.body.velocity.y - WATER_FRICTION
 
 
-
-      // playerFish.body.setVelocityX(newPlayerVelocityX)
-      // playerFish.body.setVelocityY(newPlayerVelocityY)
+      // if (!this.boosting) {
 
 
+      if (newPlayerVelocityX < 0)
+        newPlayerVelocityX = 0
 
-      /**
-       *  Update player Fish scale.
-       */
+      if (newPlayerVelocityY < 0)
+        newPlayerVelocityY = 0
 
-      playerFish.scale = gameState.size
+      if (lockedToCamPointer.x >= playerFish.x + MOUSE_X_BUFFER) {
+        playerFish.flipX = false
 
-      // fishMovementFrameCounter = 0
+        newPlayerVelocityX = (lockedToCamPointer.x - playerFish.x) / playerFish.scale
 
+      }
+
+      if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
+
+        newPlayerVelocityX = -1 * Math.abs(lockedToCamPointer.x - playerFish.x) / playerFish.scale
+        playerFish.flipX = true
+
+      }
+
+      if (lockedToCamPointer.y >= playerFish.y + MOUSE_Y_BUFFER) {
+
+        newPlayerVelocityY = (lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
+
+      }
+
+      if (lockedToCamPointer.y <= playerFish.y - MOUSE_Y_BUFFER) {
+
+        newPlayerVelocityY = -1 * Math.abs(lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
+
+      }
+
+
+
+      // const lockedToCamPointer = this.pointer.positionToCamera(this.cameras.main)
+
+
+      if (this.spacebarListener.isDown) {
+        console.log('pressing space!')
+
+        if (this.boostable === true) {
+          this.boostable = false;
+          // this.physics.moveTo(playerFish, this.pointer.x, this.pointer.y, 700); // not sure this will work, we'll see
+
+
+
+          console.log('old x: ', newPlayerVelocityX)
+          console.log('old x: ', newPlayerVelocityY)
+          this.boosting = true
+
+          // const xMovement = lockedToCamPointer.x <= 0 ? (playerFish.body.x - 500) : (playerFish.body.x + 500) 
+          // const yMovement = lockedToCamPointer.y <= 0 ? (playerFish.body.y - 500) : (playerFish.body.y + 500) 
+
+          // let newX = xMovement < 150 ? 150 : yMovement 
+          // let newY = yMovement < 150 ? 150 : yMovement 
+
+          // // TODO - don't go through right and bottom walls.
+          // console.log('new x: ', newX)
+
+
+          // this.tweens.add({
+          //   targets: playerFish,
+          //   x: newX,
+          //   y: newY,
+          //   duration: 500,
+          //   ease: 'Cubic',
+          //   yoyo: false,
+          //   loop: false,
+          // })
+
+
+        // setTimeout(() => {
+
+        // console.log('resetting boost')
+
+        // newPlayerVelocityX = 
+        // this.boosting = false
+        // playerFish.setVelocityX(playerFish.body.velocity.x - boostX)
+        // playerFish.setVelocityY(playerFish.body.velocity.y - boostY)
+        // playerFish.body.reset(playerFish.x, playerFish.y); // moveTo never stops so we have to cancel the above
+        // }, 300);
+
+        setTimeout(() => {
+          console.log('boost has cooled down')
+          this.boostable = true; // allows boosting again
+        }, 2000);
+      }
 
     }
 
+
+
+    // if (!this.boosting) {
+    //   const BOOST = 100
+
+    //   let boostX: any = BOOST
+    //   let boostY: any = BOOST
+    //   // playerFish.setVelocityX(playerFish.velocity.x + BOOST)
+    //   // playerFish.setVelocityY(playerFish.velocity.y + BOOST)
+
+
+    //   console.log('original v: ', newPlayerVelocityX)
+
+    //   if (newPlayerVelocityX < 1)
+    //   boostX = BOOST * -1
+
+    //   if (newPlayerVelocityY < 1)
+    //   boostY = BOOST * -1
+
+    //   console.log('boost amount:')
+
+    //   newPlayerVelocityX = newPlayerVelocityX + boostX
+    //   newPlayerVelocityY = newPlayerVelocityY + boostY
+
+
+    //   console.log('new v: ', newPlayerVelocityX)
+
+    // }
+
+    playerFish.body.setVelocityX(newPlayerVelocityX)
+    playerFish.body.setVelocityY(newPlayerVelocityY)
+
+
+
+    /**
+     *  Update player Fish scale.
+     */
+
+    playerFish.scale = gameState.size
+
+    // fishMovementFrameCounter = 0
+
   }
 
-  destroy() {
-    console.log('destroying!')
-  }
+}
+
+destroy() {
+  console.log('destroying!')
+}
 
 
 }
