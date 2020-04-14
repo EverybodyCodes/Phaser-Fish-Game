@@ -120,9 +120,12 @@ export default class PlayScene extends Scene {
      *  Spawn planktons over time
      */
 
-    window.setInterval(() => {
-      this.spawnSinglePlankton()
-    }, NEW_PLANKTON_SPAWN_RATE)
+    this.time.addEvent({
+      callback: this.spawnSinglePlankton,
+      callbackScope: this,
+      delay: NEW_PLANKTON_SPAWN_RATE,
+      repeat: -1
+    });
 
 
     /**
