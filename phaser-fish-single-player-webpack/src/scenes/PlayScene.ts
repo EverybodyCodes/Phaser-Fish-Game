@@ -120,18 +120,17 @@ export default class PlayScene extends Scene {
      *  Spawn planktons over time
      */
 
-    window.setInterval(() => {
-      this.spawnSinglePlankton()
-    }, NEW_PLANKTON_SPAWN_RATE)
+    this.time.addEvent({
+      callback: this.spawnSinglePlankton,
+      callbackScope: this,
+      delay: NEW_PLANKTON_SPAWN_RATE,
+      repeat: -1
+    });
 
 
     /**
-     *  Setup Mouse and keyboard listeners
+     *  Setup keyboard listeners
      */
-
-    this.input.on('pointermove', (pointer: any) => {
-      this.pointer = pointer
-    });
 
     this.spacebarListener = this.input.keyboard.addKey('Space');
 
@@ -227,9 +226,9 @@ export default class PlayScene extends Scene {
     }
 
 
-    if (playerFish.body && this.pointer !== undefined) {
+    if (playerFish.body && this.input.activePointer) {
 
-      const lockedToCamPointer = this.pointer.positionToCamera(this.cameras.main)
+      const { worldX, worldY } = this.input.activePointer;
 
 
       /**
@@ -241,7 +240,7 @@ export default class PlayScene extends Scene {
 
       //   let boostDistance = BOOST_DISTANCE
 
-      //   if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
+      //   if (worldX <= playerFish.x - MOUSE_X_BUFFER) {
       //     boostDistance *= -1
       //   }
 
@@ -275,16 +274,16 @@ export default class PlayScene extends Scene {
        *  Move Player fish horizontally
        */
 
-      if (lockedToCamPointer.x >= playerFish.x + MOUSE_X_BUFFER) {
+      if (worldX >= playerFish.x + MOUSE_X_BUFFER) {
 
         playerFish.flipX = false
-        newPlayerVelocityX = (lockedToCamPointer.x - playerFish.x) / playerFish.scale
+        newPlayerVelocityX = (worldX - playerFish.x) / playerFish.scale
 
       }
 
-      else if (lockedToCamPointer.x <= playerFish.x - MOUSE_X_BUFFER) {
+      else if (worldX <= playerFish.x - MOUSE_X_BUFFER) {
 
-        newPlayerVelocityX = -1 * Math.abs(lockedToCamPointer.x - playerFish.x) / playerFish.scale
+        newPlayerVelocityX = -1 * Math.abs(worldX - playerFish.x) / playerFish.scale
         playerFish.flipX = true
 
       }
@@ -293,15 +292,15 @@ export default class PlayScene extends Scene {
        *  Move Player fish vertically
        */
 
-      if (lockedToCamPointer.y >= playerFish.y + MOUSE_Y_BUFFER) {
+      if (worldY >= playerFish.y + MOUSE_Y_BUFFER) {
 
-        newPlayerVelocityY = (lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
+        newPlayerVelocityY = (worldY - playerFish.y) / playerFish.scale * 2
 
       }
 
-      else if (lockedToCamPointer.y <= playerFish.y - MOUSE_Y_BUFFER) {
+      else if (worldY <= playerFish.y - MOUSE_Y_BUFFER) {
 
-        newPlayerVelocityY = -1 * Math.abs(lockedToCamPointer.y - playerFish.y) / playerFish.scale * 2
+        newPlayerVelocityY = -1 * Math.abs(worldY - playerFish.y) / playerFish.scale * 2
 
       }
 
